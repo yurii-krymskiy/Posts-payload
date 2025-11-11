@@ -6,6 +6,8 @@ This template comes configured with the bare minimum to get started on anything 
 
 This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
 
+This project has been customized to use Postgres (via `@payloadcms/db-postgres`) and adds `posts` and `categories` collections with relationships and a join field.
+
 ## Quick Start - local setup
 
 To spin up this template locally, follow these steps:
@@ -17,10 +19,17 @@ After you click the `Deploy` button above, you'll want to have standalone copy o
 ### Development
 
 1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URI` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+2. `cp test.env .env` (or create your own) and set `DATABASE_URI` to your Postgres connection string, for example:
+
+```
+DATABASE_URI=postgresql://postgres:aXafFQKXVdDO@localhost:5432/payload
+PAYLOAD_SECRET=dev-secret
+```
 
 3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+4. Open `http://localhost:3000` to open the app in your browser.
+5. Hit `GET /api/seed` once (or visit `http://localhost:3000/api/seed`) to ensure the test user (`test@test.com` / `test`) exists.
+6. Use the `authorizeUser` server action (frontend WIP) to login and then create posts with `createPost`.
 
 That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
 
@@ -49,6 +58,25 @@ See the [Collections](https://payloadcms.com/docs/configuration/collections) doc
   For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
 
 - #### Media
+
+- #### Categories
+
+  Fields: `title`, `slug`, `content`, `owner`, and virtual join field `posts` (shows related posts via post `categories` relationship). All users can read; authenticated users can create/update/delete their own categories.
+
+- #### Posts
+
+  Fields: `title`, `slug`, `categories` (relationship hasMany), `content`, `owner`. Public read, authenticated create/update/delete own posts. Slug auto-generated from title; owner set automatically on create.
+
+### Server Actions
+
+Located in `src/app/server/actions/`:
+
+- `authorizeUser(email, password)` — logs in a user and returns `{ user, token }`.
+- `createPost({ title, content, categoryIds }, token)` — creates a post using the auth token from login.
+
+### Seeding
+
+`GET /api/seed` ensures a test user exists for local development.
 
   This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
 
