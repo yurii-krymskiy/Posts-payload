@@ -26,7 +26,7 @@ body {
   line-height: 32px;
 
   margin: 0;
-  color: rgb(1000, 1000, 1000);
+  color: #ffffff;
 
   @media (max-width: 1024px) {
     font-size: 15px;
@@ -98,7 +98,6 @@ svg {
   padding: 45px;
   max-width: 1024px;
   margin: 0 auto;
-  overflow: hidden;
 
   @media (max-width: 400px) {
     padding: 24px;
@@ -110,6 +109,10 @@ svg {
     align-items: center;
     justify-content: center;
     flex-grow: 1;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    gap: 16px;
 
     h1 {
       text-align: center;
@@ -161,4 +164,88 @@ svg {
       border-radius: 4px;
     }
   }
+}
+
+/* Extra UI elements */
+.card {
+  width: 100%;
+  max-width: 720px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin: 12px 0 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card h2 {
+  margin: 0 0 12px 0;
+  font-size: 22px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0 12px 0;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+textarea,
+select {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px 12px;
+  font-size: 16px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: #c3ff00;
+  color: #000;
+  border-color: #c3ff00;
+}
+
+.btn.outline {
+  background: transparent;
+}
+
+.error { color: #ff7a7a; }
+
+.user-info { width: 100%; max-width: 720px; display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px; }
+.user-info .greeting { margin: 0; font-size: 28px; line-height: 1.2; }
+.logout-form { margin-left: auto; }
+
+.posts { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.post { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; }
+.post-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.post .meta { display: flex; gap: 12px; opacity: 0.8; font-size: 14px; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.tag { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 2px 8px; font-size: 12px; }
+
+/* Tag picker for PostForm */
+.tag-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.chip { margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); color: #fff; border-radius: 999px; padding: 6px 12px; cursor: pointer; transition: background .15s ease, border-color .15s ease, color .15s ease; }
+.chip.active { background: #c3ff00; color: #000; border-color: #c3ff00; }
+
+@media (max-width: 768px) {
+  .user-info { flex-direction: column; align-items: stretch; gap: 10px; }
+  .user-info .greeting { font-size: 24px; text-align: left; }
+  .logout-form { margin-left: 0; }
+  .card { padding: 16px; }
 }

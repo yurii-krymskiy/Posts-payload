@@ -16,9 +16,15 @@ export const Posts: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req }: any) => Boolean(req.user),
-    update: ({ req }: any) => Boolean(req.user),
-    delete: ({ req }: any) => Boolean(req.user),
+    create: ({ req }: any) => !!req.user,
+    update: ({ req }: any) => {
+      if (!req.user) return false
+      return { owner: { equals: req.user.id } }
+    },
+    delete: ({ req }: any) => {
+      if (!req.user) return false
+      return { owner: { equals: req.user.id } }
+    },
   },
   fields: [
     {
@@ -36,6 +42,9 @@ export const Posts: CollectionConfig = {
       type: 'relationship',
       relationTo: 'categories' as any,
       hasMany: true,
+      admin: {
+        description: 'Select one or more categories (optional).',
+      },
     },
     {
       name: 'content',

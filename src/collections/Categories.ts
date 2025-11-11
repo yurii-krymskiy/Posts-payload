@@ -34,9 +34,16 @@ export const Categories: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req }: any) => Boolean(req.user),
-    update: ({ req }: any) => Boolean(req.user),
-    delete: ({ req }: any) => Boolean(req.user),
+    create: ({ req }: any) => !!req.user,
+    // Use where constraints so we don't rely on `doc` being present
+    update: ({ req }: any) => {
+      if (!req.user) return false
+      return { owner: { equals: req.user.id } }
+    },
+    delete: ({ req }: any) => {
+      if (!req.user) return false
+      return { owner: { equals: req.user.id } }
+    },
   },
   fields: [
     {

@@ -206,6 +206,9 @@ export interface Post {
   id: number;
   title: string;
   slug?: string | null;
+  /**
+   * Select one or more categories (optional).
+   */
   categories?: (number | Category)[] | null;
   content?: {
     root: {
