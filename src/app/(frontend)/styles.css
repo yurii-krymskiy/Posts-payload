@@ -92,10 +92,11 @@ svg {
 .home {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* Removed space-between so content isn't forced to bottom */
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   padding: 45px;
+  padding-bottom: 140px; /* extra breathing room below last card */
   max-width: 1024px;
   margin: 0 auto;
 
@@ -249,3 +250,20 @@ select {
   .logout-form { margin-left: 0; }
   .card { padding: 16px; }
 }
+
+/* Toasts */
+.toast-container { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; pointer-events: none; }
+.toast { pointer-events: auto; border-radius: 12px; padding: 10px 14px; background: rgba(0,0,0,0.85); border: 1px solid rgba(255,255,255,0.15); color: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.3); animation: toastIn .25s ease; }
+.toast.success { border-color: #8bd100; background: rgba(195, 255, 0, 0.1); color: #eaff9b; }
+.toast.error { border-color: #ff7a7a; background: rgba(255, 122, 122, 0.12); color: #ffd7d7; }
+@keyframes toastIn { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* Spinner */
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: currentColor; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: -2px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Skeletons */
+.skeleton-line { height: 18px; border-radius: 6px; background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.16), rgba(255,255,255,0.08)); background-size: 200% 100%; animation: shimmer 1.2s ease-in-out infinite; }
+.skeleton-tag { display: inline-block; width: 64px; height: 22px; border-radius: 999px; background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.16), rgba(255,255,255,0.08)); background-size: 200% 100%; animation: shimmer 1.2s ease-in-out infinite; }
+.skeleton-chip { display: inline-block; width: 90px; height: 32px; border-radius: 999px; background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.16), rgba(255,255,255,0.08)); background-size: 200% 100%; animation: shimmer 1.2s ease-in-out infinite; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }

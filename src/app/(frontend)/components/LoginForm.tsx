@@ -31,8 +31,8 @@ export default function LoginForm({ onLogin }: Props) {
         Password
         <input name="password" type="password" placeholder="test" required />
       </label>
-      <button type="submit" disabled={pending} className="btn primary">
-        {pending ? 'Signing in…' : 'Sign in'}
+      <button type="submit" disabled={pending} className="btn primary" aria-busy={pending}>
+        {pending && <span className="spinner" aria-hidden="true" />} {pending ? 'Signing in…' : 'Sign in'}
       </button>
       {state?.error && <p className="error">{state.error}</p>}
     </form>

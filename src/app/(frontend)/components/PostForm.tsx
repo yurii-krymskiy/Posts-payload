@@ -16,6 +16,7 @@ async function fetchCategories(): Promise<Category[]> {
 
 export default function PostForm() {
   const [categories, setCategories] = useState<Category[]>([])
+  const [categoriesLoading, setCategoriesLoading] = useState<boolean>(true)
   const [selected, setSelected] = useState<string[]>([])
   const [state, action, pending] = useActionState<any, FormData>(createPostAction as any, null)
 
@@ -23,8 +24,6 @@ export default function PostForm() {
     const load = async () => {
       try {
         let cats = await fetchCategories()
-        console.log(cats);
-        
         if (!cats.length) {
           // attempt to seed defaults (Fun, Education, Tech)
           await fetch('/api/seed').catch(() => { })
@@ -33,6 +32,8 @@ export default function PostForm() {
         setCategories(cats)
       } catch {
         setCategories([])
+      } finally {
+        setCategoriesLoading(false)
       }
     }
     load()
@@ -43,8 +44,15 @@ export default function PostForm() {
       // Notify global listener to refresh posts
       ; (window as any).refreshPosts?.()
       setSelected([])
+        ; (window as any).showToast?.('Post created', 'success')
     }
   }, [state?.success])
+
+  useEffect(() => {
+    if (state?.error) {
+      ; (window as any).showToast?.(String(state.error), 'error')
+    }
+  }, [state?.error])
 
   const selectedSet = useMemo(() => new Set(selected), [selected])
   const toggle = (id: string) => {
@@ -64,27 +72,35 @@ export default function PostForm() {
       </label>
       <div>
         <div style={{ marginBottom: 6 }}>Categories</div>
-        <div className="tag-picker">
-          {categories.map((c) => {
-            const active = selectedSet.has(c.id)
-            return (
-              <button
-                type="button"
-                key={c.id}
-                className={`chip ${active ? 'active' : ''}`}
-                onClick={() => toggle(c.id)}
-              >
-                {c.title}
-              </button>
-            )
-          })}
-        </div>
+        {categoriesLoading ? (
+          <div className="tag-picker">
+            <span className="chip skeleton-chip" />
+            <span className="chip skeleton-chip" />
+            <span className="chip skeleton-chip" />
+          </div>
+        ) : (
+          <div className="tag-picker">
+            {categories.map((c) => {
+              const active = selectedSet.has(c.id)
+              return (
+                <button
+                  type="button"
+                  key={c.id}
+                  className={`chip ${active ? 'active' : ''}`}
+                  onClick={() => toggle(c.id)}
+                >
+                  {c.title}
+                </button>
+              )
+            })}
+          </div>
+        )}
         {selected.map((id) => (
           <input key={id} type="hidden" name="categories" value={id} />
         ))}
       </div>
-      <button type="submit" className="btn primary" disabled={pending}>
-        {pending ? 'Creating…' : 'Create'}
+      <button type="submit" className="btn primary" disabled={pending} aria-busy={pending}>
+        {pending && <span className="spinner" aria-hidden="true" />} {pending ? 'Creating…' : 'Create'}
       </button>
       {state?.error && <p className="error">{state.error}</p>}
     </form>

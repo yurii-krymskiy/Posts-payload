@@ -34,7 +34,7 @@ export async function authorizeUserAction(_prevState: any, formData: FormData) {
   if (res?.success) {
     // Ensure the page re-renders with fresh cookies immediately
     revalidatePath('/')
-    redirect('/')
+    redirect('/?login=success')
   }
   return res
 }

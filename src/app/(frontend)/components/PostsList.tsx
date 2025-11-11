@@ -19,10 +19,12 @@ async function fetchPosts(): Promise<Post[]> {
 
 export default function PostsList() {
   const [posts, setPosts] = useState<Post[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   async function load() {
     const data = await fetchPosts()
     setPosts(data)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -36,7 +38,27 @@ export default function PostsList() {
   return (
     <div className="card">
       <h2>Posts</h2>
-      {posts.length === 0 && <p>No posts yet.</p>}
+      {loading && (
+        <ul className="posts" style={{ margin: '12px 0' }}>
+          {[0, 1, 2].map((i) => (
+            <li key={i} className="post">
+              <div className="post-header" style={{ marginBottom: "10px" }}>
+                <div className="skeleton-line" style={{ width: '50%' }} />
+                <div className="meta" style={{ width: '35%' }}>
+                  <div className="skeleton-line" style={{ width: '60%', height: 14 }} />
+                </div>
+              </div>
+              <div className="skeleton-line" style={{ width: '100%', marginBottom: "10px" }} />
+              <div className="skeleton-line" style={{ width: '85%' }} />
+              <div className="tags" style={{ marginTop: 10 }}>
+                <span className="skeleton-tag" />
+                <span className="skeleton-tag" />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      {!loading && posts.length === 0 && <p>No posts yet.</p>}
       <ul className="posts">
         {posts.map((p) => {
           const ownerEmail = typeof p.owner === 'string' ? p.owner : p.owner?.email
