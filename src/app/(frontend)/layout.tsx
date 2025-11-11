@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import './styles.css'
 import Toasts from './components/Toasts'
 
@@ -14,7 +14,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en">
       <body>
         <main>{children}</main>
-        <Toasts />
+        <Suspense fallback={null}>
+          <Toasts />
+        </Suspense>
       </body>
     </html>
   )

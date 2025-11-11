@@ -10,6 +10,7 @@ const compat = new FlatCompat({
 })
 
 const eslintConfig = [
+  // Use compat to pull in Next.js recommended config
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {
@@ -32,6 +33,12 @@ const eslintConfig = [
   },
   {
     ignores: ['.next/'],
+  },
+  // Workaround build-time import resolution error for @eslint/eslintrc
+  {
+    settings: {
+      // no custom settings yet
+    },
   },
 ]
 
