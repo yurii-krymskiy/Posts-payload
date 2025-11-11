@@ -210,21 +210,10 @@ export interface Post {
    * Select one or more categories (optional).
    */
   categories?: (number | Category)[] | null;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  /**
+   * Post content (plain text).
+   */
+  content?: string | null;
   owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;

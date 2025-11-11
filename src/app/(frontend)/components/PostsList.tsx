@@ -8,6 +8,7 @@ export type Post = {
   createdAt: string
   owner?: { email?: string } | string
   categories?: Array<{ id: string; title: string } | string>
+  content?: any
 }
 
 async function fetchPosts(): Promise<Post[]> {
@@ -26,7 +27,7 @@ export default function PostsList() {
 
   useEffect(() => {
     load()
-    ;(window as any).refreshPosts = load
+      ; (window as any).refreshPosts = load
     return () => {
       delete (window as any).refreshPosts
     }
@@ -41,6 +42,7 @@ export default function PostsList() {
           const ownerEmail = typeof p.owner === 'string' ? p.owner : p.owner?.email
           const categories = (p.categories || []).map((c) => (typeof c === 'string' ? c : c.title))
           const created = new Date(p.createdAt)
+          const plainContent = typeof p.content === 'string' ? p.content : extractPlainText(p.content)
           return (
             <li key={p.id} className="post">
               <div className="post-header">
@@ -57,6 +59,11 @@ export default function PostsList() {
                   </span>
                 </div>
               </div>
+              {plainContent && (
+                <div className="post-content">
+                  {plainContent.length > 260 ? plainContent.slice(0, 260) + '…' : plainContent}
+                </div>
+              )}
               {categories.length > 0 && (
                 <div className="tags">
                   {categories.map((c) => (
@@ -72,4 +79,27 @@ export default function PostsList() {
       </ul>
     </div>
   )
+}
+
+// Convert Payload Lexical richText JSON into plain text for simple preview
+function extractPlainText(rich: any): string {
+  if (!rich) return ''
+  if (typeof rich === 'string') return rich
+  // Lexical root typically: { root: { children: [...] } }
+  const root = rich.root || rich
+  const out: string[] = []
+  const walk = (node: any) => {
+    if (!node) return
+    if (Array.isArray(node)) {
+      node.forEach(walk)
+      return
+    }
+    const children = node.children
+    if (node.type === 'text' && typeof node.text === 'string') {
+      out.push(node.text)
+    }
+    if (children) walk(children)
+  }
+  walk(root.children || root)
+  return out.join(' ').replace(/\s+/g, ' ').trim()
 }

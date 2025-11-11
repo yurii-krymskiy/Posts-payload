@@ -48,7 +48,11 @@ export const Posts: CollectionConfig = {
     },
     {
       name: 'content',
-      type: 'richText',
+      type: 'textarea',
+      admin: {
+        rows: 6,
+        description: 'Post content (plain text).',
+      },
     },
     {
       name: 'owner',
